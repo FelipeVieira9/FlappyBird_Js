@@ -9,6 +9,19 @@ let row = 0;
 const frameHeightWidth = 20;
 let frameCount = 0;
 const sprites = {
+    especial: { // To make moviment on scenario grass
+        scenario_grass: [0, 160, 320, 480, 640, 800, 960, 1120],
+        scenario_cloud: [
+            {x: 100, y: Math.floor(Math.random() * ((h*0.5) - 20) + 20)}, 
+            {x: 250, y: Math.floor(Math.random() * ((h*0.5) - 20) + 20)}, 
+            {x: 400, y: Math.floor(Math.random() * ((h*0.5) - 20) + 20)}, 
+            {x: 500, y: Math.floor(Math.random() * ((h*0.5) - 20) + 20)}, 
+            {x: 700, y: Math.floor(Math.random() * ((h*0.5) - 20) + 20)}, 
+            {x: 770, y: Math.floor(Math.random() * ((h*0.5) - 20) + 20)}, 
+            {x: 800, y: Math.floor(Math.random() * ((h*0.5) - 20) + 20)}, 
+            {x: 900, y: Math.floor(Math.random() * ((h*0.5) - 20) + 20)},  
+        ]
+    },
     birds: {
         normal: './sprites/bird_sprites/Bird.png'
     }, 
@@ -16,12 +29,17 @@ const sprites = {
         normal: './sprites/obstacles/wood_pixel.png'
     },
     scenario: {
-        normal: './sprites/scenario/scenario_pixel.png'
+        grass: './sprites/scenario/scenario_pixel.png',
+        cloud: './sprites/scenario/cloud.png'
     }
 }
+// queria usar somente 1 img e mudar somente o src pra cada caso, mas tá acontecendo um bug só aceita somente 1 src pra cada image
+// eu acredito que, por conta de alguma particularidade da classe image que desconheço, não tá dando tempo de carregar a imagem e acaba sobreescrevendo com o ultimo src atribuído no frame
 let img = new Image();
 let img2 = new Image();
-let img_scenario = new Image();
+let img_scenario_grass = new Image();
+let img_scenario_cloud = new Image();
+// let sceneHandle = 5;
 
 // DOM
 const restartGame = document.getElementById('restartGame');
@@ -63,10 +81,9 @@ class Obstacles {
 // #Functions 
 // -> Create Obstacles
 const createObstacles = ({width, position, randomVal, avaliablePoints}) => {
-    ctx.fillStyle = 'black';
+    ctx.fillStyle = '#3b2b11';
     img2.src = sprites.obstacles.normal;
     position.forEach((x, i) => {
-        ctx.fillRect(x, 0, width, 700);
         
         for (let y = 0; y <= 400; y += 40) {
             ctx.drawImage(img2, 0, 0, 40, 40, x, y, 40, 40);
@@ -76,12 +93,11 @@ const createObstacles = ({width, position, randomVal, avaliablePoints}) => {
         // rotate image and return to origin
         ctx.save();
         ctx.scale(1, -1);
-        // ctx.rotate(Math.PI * 2);
         ctx.drawImage(img2, 0, 40, 40, 40, x, -randomVal[i] + 15 - player.width, 40, 40); // idk if this is right cause the scale
         ctx.restore();
-
-        ctx.clearRect(x, randomVal[i], width, player.width + 40);
-        ctx.fillStyle = 'black';
+        
+        ctx.fillRect(x, randomVal[i], width, player.width + 40);
+        ctx.fillStyle = '#3b2b11';
 
         position[i] -= 2;
         if (position[i] <= -500) {
@@ -159,7 +175,40 @@ const drawBird = () => {
 
 // -> Draw scenario 
 const drawScenario = () => {
-    
+    // < Grass >
+    img_scenario_grass.src = sprites.scenario.grass;
+ctx.imageSmoothingQuality = 'high'
+    sprites.especial.scenario_grass.forEach((el, i) => {
+        
+        ctx.drawImage(img_scenario_grass, 0, 160, 160, 160, el, h - 160, 160, 160);
+        sprites.especial.scenario_grass[i] -= 1;
+
+        if (el <= -360) {
+            sprites.especial.scenario_grass.shift();
+            sprites.especial.scenario_grass.push(sprites.especial.scenario_grass[sprites.especial.scenario_grass.length - 1] + 160);
+        }
+    })
+
+    // < Cloud > 
+    img_scenario_cloud.src = sprites.scenario.cloud;
+
+    sprites.especial.scenario_cloud.forEach(({x, y}, i) => {
+      ctx.drawImage(img_scenario_cloud, 0, 0, 60, 60, x, y, 60, 60); 
+      sprites.especial.scenario_cloud[i].x -= 0.5; 
+    })
+    if (sprites.especial.scenario_cloud[0].x < -220) {
+        sprites.especial.scenario_cloud.shift();
+
+        const lastValue1 = sprites.especial.scenario_cloud.length - 1;
+        const lastValue2 = sprites.especial.scenario_cloud[lastValue1].x;
+
+        
+        const newCloud = {
+            x: lastValue2 + (Math.random() * 400),
+            y: Math.floor(Math.random() * ((h*0.5) - 20) + 20)
+        }
+        sprites.especial.scenario_cloud.push(newCloud);
+      }
 }
 // Main function to draw player in canvas, check some property and call functions like createObstacles()
 const draw = () => {
@@ -184,13 +233,18 @@ const draw = () => {
         }
     }
 
+    // Scenario
+    // -> Sky
+    ctx.fillStyle = '#87CEEB';
+    ctx.fillRect(0, 0, 700, 400);
+    
+    // -> Wall Color and some grass on the ground with moviment
+    drawScenario();
+
     // Obstacles
     createObstacles(obstacles);
 
     // Player positions 
-    // ctx.fillStyle = 'yellow';
-    // ctx.stroke()
-    // ctx.fillRect(player.position.x, player.position.y, player.width, player.height);
     drawBird();
 
     // Check if player hit Obstacles
