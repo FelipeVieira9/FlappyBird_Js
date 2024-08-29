@@ -1,3 +1,4 @@
+// Global variables
 const w = 700, h = 400;
 let isPressed = false;
 let hitPlatform = false;
@@ -39,7 +40,6 @@ let img = new Image();
 let img2 = new Image();
 let img_scenario_grass = new Image();
 let img_scenario_cloud = new Image();
-// let sceneHandle = 5;
 
 // DOM
 const restartGame = document.getElementById('restartGame');
@@ -49,7 +49,6 @@ const menu_title = document.getElementById('menu_title');
 // 
 
 const canvas = document.querySelector('canvas');
-
 const ctx = document.querySelector('canvas').getContext('2d');
 
 canvas.setAttribute('width', `${w}px`);
@@ -238,7 +237,7 @@ const draw = () => {
     ctx.fillStyle = '#87CEEB';
     ctx.fillRect(0, 0, 700, 400);
     
-    // -> Wall Color and some grass on the ground with moviment
+    // -> Wall Color and some grass on the ground with moviment and clouds
     drawScenario();
 
     // Obstacles
@@ -259,8 +258,6 @@ const draw = () => {
         
         document.querySelector('body').removeEventListener('keydown', enableControls);
         document.querySelector('body').removeEventListener('keyup', enableControls);
-        
-
 
         return;
     }
@@ -268,7 +265,6 @@ const draw = () => {
 }
 // função Ativa os controles do boneco
 const enableControls = ({type}) => {
-    // console.log(type);
     if (type === 'keydown') {
         if (!isPressed) {
             isPressed = true;
@@ -295,8 +291,6 @@ const gameStart = () => {
     document.querySelector('body').addEventListener('keydown', enableControls);
     document.querySelector('body').addEventListener('keyup', enableControls);
 
-    
-
     obstacles.randomVal.forEach((val, i) => {
         let random = Math.random() * h;
             
@@ -308,7 +302,6 @@ const gameStart = () => {
     
         obstacles.randomVal[i] = random;
     })
-
     draw();
 }
 

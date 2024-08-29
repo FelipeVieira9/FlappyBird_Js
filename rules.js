@@ -1,4 +1,1 @@
-export {gravity}
-const gravity = () => {
-    console.log('foi');
-}
+// The functions should be here...
