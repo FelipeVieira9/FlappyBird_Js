@@ -1,3 +1,11 @@
+/*
+    BUGS: 
+    1. The function animateShop() is build wrong, making the firsts sprites bug only in the start, cause onload problem on images and i dont
+    know to fix it
+    2. The clouds may bug too cause the way i made them
+    3. Thats all i think...
+*/
+
 // Global variables
 const w = 700, h = 400;
 let isPressed = false;
@@ -255,7 +263,6 @@ const openShop = (bool) => {
         shop.style.display = 'none';
     }
 }
-
 const animateShop = () => {
     if (playAnimationShop === false) {
         return;
@@ -272,7 +279,7 @@ const animateShop = () => {
 
     // All Sprites list
     storageSprites.allSprites.forEach((src) => {
-        let img = new Image();
+        const img = new Image();
         img.onload = function() {
             const regex = /(.\/sprites\/bird_sprites\/)|(.png$)/g
 
@@ -283,7 +290,6 @@ const animateShop = () => {
             ctx.drawImage(img, column*frameHeightWidth, row*frameHeightWidth, frameHeightWidth, frameHeightWidth, (canvas.width/2) - frameHeightWidth*2, (canvas.height/2) - frameHeightWidth*2, frameHeightWidth*4, frameHeightWidth*4);
         }
         img.src = src;
-
     })
     // Next frame
     if (frameCount === 8) {
@@ -301,7 +307,7 @@ const animateShop = () => {
     } else {
         frameCount++;
     }
-
+    
     window.requestAnimationFrame(animateShop);
 }
 
@@ -320,7 +326,6 @@ const updateSkin = (skinId) => {
                 node.classList.remove('choosed');
                 node.classList.add('noChoosed');
             }
-            console.log(node.classList)
         })
 
         spriteNode.classList.toggle('noChoosed');
