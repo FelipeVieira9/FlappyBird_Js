@@ -4,6 +4,13 @@
     know to fix it
     2. The clouds may bug too cause the way i made them
     3. Thats all i think...
+
+
+    Thoughts: in portuguese -> Esse foi o primeiro projeto que eu fiz que ficou com uma quantidade tão grande de linhas, que eu ache grande, 
+    e com isso eu acabava me perdendo com frequêndia no que eu tava fazendo ou quando queria procurar algo específico, também ficou muito 
+    bagunçado por conta que eu não utilizei as classes de forma apropriada e ainda ficou um monte de função perdida e variáveis globais que
+    eu não gostei. Em projetos futuros eu planejo utilizar mais as classes e separar a maioria das funções em uma pasta específica para deixar
+    o código mais limpo. Não sabia que a image.src precisava esperar carregar, por isso tem uns bugs no jogo
 */
 
 // Global variables
@@ -68,8 +75,6 @@ for (let key in sprites.birds) {
 let playAnimationShop = false;
 
 console.log(storageSprites);
-// queria usar somente 1 img e mudar somente o src pra cada caso, mas tá acontecendo um bug só aceita somente 1 src pra cada image
-// eu acredito que, por conta de alguma particularidade da classe image que desconheço, não tá dando tempo de carregar a imagem e acaba sobreescrevendo com o ultimo src atribuído no frame
 let img = new Image();
 let img2 = new Image();
 let img_scenario_grass = new Image();
