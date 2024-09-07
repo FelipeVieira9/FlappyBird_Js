@@ -108,6 +108,14 @@ class Player {
         this.dy = 0, // subir é negativo
         this.g = 0.6
     }
+
+    jumpSound () {
+        const audio = new Audio();
+        audio.src = "./sounds/jump.wav";
+        console.log("Jogador pulou!");
+        audio.volume = '0.1';
+        audio.addEventListener('loadeddata', () => audio.play());
+    }
 }
 
 class Obstacles {
@@ -379,6 +387,7 @@ const draw = () => {
         if (player.dy >= 4) {
             player.dy = 4;
         }
+        
     } else if ((player.position.y + player.height + player.dy) >= h) {
         hitPlatform = true;
     } else {
@@ -427,6 +436,8 @@ const enableControls = ({type}) => {
         if (!isPressed) {
             isPressed = true;
             player.dy = -5; // negativo pq o eixo y é invertido
+            player.jumpSound();
+        
         }
     } else if (type === 'keyup') {
         if (isPressed) {
